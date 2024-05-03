@@ -14,55 +14,50 @@ import {customElement, property} from 'lit/decorators.js';
  * @slot - This element has a slot
  * @csspart button - The button
  */
-@customElement('my-element')
-export class MyElement extends LitElement {
+@customElement('panel-key')
+export class PanelKey extends LitElement {
   static override styles = css`
     :host {
-      display: block;
-      border: solid 1px gray;
-      padding: 16px;
-      max-width: 800px;
+      display: flex;
+      padding: 6px;
+      max-width: 100px;
+      max-height: 100px;
+    }
+    button {
+      padding:16px;
     }
   `;
 
   /**
-   * The name to say "Hello" to.
-   */
-  @property()
-  name = 'World';
-
-  /**
    * The number of times the button has been clicked.
    */
-  @property({type: Number})
-  count = 0;
+  @property()
+  text = "";
+
+  @property()
+  action = "";
 
   override render() {
     return html`
-      <h1>${this.sayHello(this.name)}!</h1>
       <button @click=${this._onClick} part="button">
-        Click Count: ${this.count}
+        ${this.text}
       </button>
       <slot></slot>
     `;
   }
 
   private _onClick() {
-    this.count++;
-    this.dispatchEvent(new CustomEvent('count-changed'));
+    this.dispatchEvent(new CustomEvent('key-pressed', {
+      detail: {
+        action: this.action,
+      }
+    }));
   }
 
-  /**
-   * Formats a greeting
-   * @param name The name to say "Hello" to
-   */
-  sayHello(name: string): string {
-    return `Hello, ${name}`;
-  }
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    'my-element': MyElement;
+    'panel-key': PanelKey;
   }
 }
